@@ -56,7 +56,7 @@ public class Player_Behavior : MonoBehaviour
         {
             GameObject newBullet = Instantiate(bullet, this.transform.position + new Vector3(1f,0,0),this.transform.rotation) as GameObject;
             Rigidbody BulletRB = newBullet.GetComponent<Rigidbody>();
-            BulletRB.velocity = this.transform.forward * bulletSpeed;
+            BulletRB.linearVelocity = this.transform.forward * bulletSpeed;
 
         }
     }
