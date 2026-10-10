@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 
 public class LearningCurve : MonoBehaviour
 {
@@ -21,7 +17,7 @@ public class LearningCurve : MonoBehaviour
     //Character hero = new Character();
     void Start()
     {
-        
+
         //local variable
         /*
         // Coment unusing variables and this code ( in futhure it must be delete)
@@ -49,6 +45,4 @@ public class LearningCurve : MonoBehaviour
         //Debug.LogFormat($"Direction light position is {lightTransform.localPosition}");
         */
     }
-
-    // Update is called once per frame
 }

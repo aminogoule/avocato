@@ -1,32 +1,38 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class EnemyBehavior : MonoBehaviour
 {
     public Transform patrolRoute; //ref to object whom linked in inspector
-    public List<Transform> locations; // add list nav point 
+    [SerializeField] private List<Transform> locations = new(); // nav points, filled from patrolRoute
     private NavMeshAgent agent;
     private int locationIdex = 0;
     public Transform player;
+    private bool _isChasing = false;
     private int _lives = 3; //set enemy lives
     public int EnemyLives
     {
-        get {return _lives;}
-        private set{
+        get { return _lives; }
+        private set
+        {
             _lives = value;
-            if(_lives<=0)
+            if (_lives <= 0)
             {
-                Destroy(this.gameObject);
-                Debug.Log("Enemy destroyed");
+                Die();
             }
         }
     }
     void InitializePatrolRoute()
     {
-        foreach(Transform child in patrolRoute)
+        //чистим список, иначе точки продублируются, если он уже заполнен в инспекторе
+        locations.Clear();
+        if (patrolRoute == null)
+        {
+            Debug.LogWarning("Patrol route is not assigned", this);
+            return;
+        }
+        foreach (Transform child in patrolRoute)
         {
             //adding to list
             locations.Add(child);
@@ -34,47 +40,85 @@ public class EnemyBehavior : MonoBehaviour
     }
     void MoveToNextPoint()
     {
-        if(locations.Count ==0) //if locatoin equal 0 then return
+        if (locations.Count == 0) //if locatoin equal 0 then return
             return;
-        
+
+        locationIdex = (locationIdex + 1) % locations.Count; //infinite location points
+        GoToCurrentPoint();
+    }
+    void GoToCurrentPoint()
+    {
+        if (locations.Count == 0)
+            return;
+
         agent.destination = locations[locationIdex].position;
-        locationIdex = (locationIdex +1) % locations.Count; //infinite location points
     }
     public void Start()
     {
-        InitializePatrolRoute();
         agent = GetComponent<NavMeshAgent>();
-        MoveToNextPoint();
-        player = GameObject.Find("Player").transform; //get transform method
-    }
-    private void OnTriggerEnter(Collider other) {
-        if(other.name == "Player")
+        InitializePatrolRoute();
+        GoToCurrentPoint();
+        if (player == null)
         {
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player"); //get player by tag
+            if (playerObject != null)
+            {
+                player = playerObject.transform;
+            }
+        }
+        if (player == null)
+        {
+            Debug.LogError("Object with tag Player not found on the scene", this);
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player") && player != null)
+        {
+            _isChasing = true;
             agent.destination = player.position;
             Debug.Log("Player has enter to vision");
         }
     }
     private void OnTriggerExit(Collider other)
     {
-        if(other.name == "Player")
+        if (other.CompareTag("Player"))
         {
-            MoveToNextPoint(); // return to patrol route when leave player
+            _isChasing = false;
+            GoToCurrentPoint(); // возвращаемся к той же точке, а не через одну
             Debug.Log("Player has leave trigger site");
         }
     }
     void Update()
     {
-        if(agent.remainingDistance<0.2f && !agent.pathPending)
+        if (_isChasing && player != null)
+        {
+            agent.destination = player.position; //держим цель, пока игрок в зоне видимости
+            return;
+        }
+        if (agent.remainingDistance < 0.2f && !agent.pathPending)
         {
             MoveToNextPoint();
         }
     }
     void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.name == "Bullet(Clone)")
+        if (collision.gameObject.CompareTag("Bullet"))
         {
-            EnemyLives-=1;
+            Destroy(collision.gameObject); //одна пуля наносит ровно один урон
+            EnemyLives -= 1;
             Debug.Log("Got a hit");
         }
+    }
+    private void Die()
+    {
+        Debug.Log("Enemy destroyed");
+        //отключаем логику сразу, Destroy сработает только в конце кадра
+        enabled = false;
+        if (agent != null && agent.isOnNavMesh)
+        {
+            agent.isStopped = true;
+        }
+        Destroy(this.gameObject);
     }
 }

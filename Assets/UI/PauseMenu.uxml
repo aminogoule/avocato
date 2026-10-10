@@ -1,0 +1,65 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="PauseMenu.uss" />
+    <ui:VisualElement name="overlay" class="overlay hidden" picking-mode="Position">
+
+        <ui:VisualElement name="pause-screen" class="panel pause-panel">
+            <ui:Label text="Пауза" class="title" />
+            <ui:Button name="resume" text="Продолжить" class="menu-button" />
+            <ui:Button name="open-settings" text="Настройки" class="menu-button" />
+            <ui:Button name="restart" text="Начать заново" class="menu-button" />
+            <ui:Button name="quit" text="Выйти из игры" class="menu-button menu-button--quiet" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="settings-screen" class="panel settings-panel hidden">
+            <ui:Label text="Настройки" class="title" />
+            <ui:TabView name="tabs" class="tabs">
+
+                <ui:Tab label="Управление">
+                    <ui:ScrollView class="tab-scroll">
+                        <ui:Label text="Мышь и геймпад" class="section" />
+                        <ui:Slider name="mouse-sensitivity" label="Чувствительность мыши" low-value="0.1" high-value="3" show-input-field="true" />
+                        <ui:Slider name="stick-sensitivity" label="Чувствительность стика" low-value="0.2" high-value="3" show-input-field="true" />
+                        <ui:Toggle name="invert-y" label="Инвертировать вертикаль" />
+                        <ui:Label text="Клавиши" class="section" />
+                        <ui:Label text="Нажмите на клавишу, чтобы переназначить. Esc — отмена." class="hint" />
+                        <ui:VisualElement name="bindings" />
+                        <ui:Button name="reset-bindings" text="Вернуть клавиши по умолчанию" class="small-button" />
+                    </ui:ScrollView>
+                </ui:Tab>
+
+                <ui:Tab label="Камера">
+                    <ui:ScrollView class="tab-scroll">
+                        <ui:Toggle name="free-camera" label="Свободная камера" />
+                        <ui:Label text="Выключено — камера держится за спиной героя, мышью её можно отвести. Включено — камера крутится только мышью." class="hint" />
+                        <ui:Slider name="fov" label="Поле зрения" low-value="50" high-value="100" show-input-field="true" />
+                        <ui:Slider name="camera-distance" label="Отдаление камеры" low-value="0.6" high-value="1.8" show-input-field="true" />
+                    </ui:ScrollView>
+                </ui:Tab>
+
+                <ui:Tab label="Графика">
+                    <ui:ScrollView class="tab-scroll">
+                        <ui:Toggle name="fullscreen" label="Во весь экран" />
+                        <ui:DropdownField name="resolution" label="Разрешение" />
+                        <ui:Label name="editor-hint" text="В редакторе размер задаёт вкладка Game — эти две настройки заработают в сборке." class="hint" />
+                        <ui:DropdownField name="quality" label="Качество" />
+                        <ui:Toggle name="vsync" label="Вертикальная синхронизация" />
+                        <ui:DropdownField name="fps-limit" label="Ограничение кадров" />
+                    </ui:ScrollView>
+                </ui:Tab>
+
+                <ui:Tab label="Звук">
+                    <ui:ScrollView class="tab-scroll">
+                        <ui:SliderInt name="master-volume" label="Общая громкость" low-value="0" high-value="100" show-input-field="true" />
+                        <ui:SliderInt name="music-volume" label="Музыка" low-value="0" high-value="100" show-input-field="true" />
+                    </ui:ScrollView>
+                </ui:Tab>
+
+            </ui:TabView>
+            <ui:VisualElement class="footer">
+                <ui:Button name="reset-all" text="По умолчанию" class="menu-button menu-button--quiet footer-button" />
+                <ui:Button name="back" text="Готово" class="menu-button footer-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>
