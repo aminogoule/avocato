@@ -12,6 +12,7 @@ public class SettingsData
     public string bindingOverrides = "";    // переназначенные клавиши, формат Input System
 
     [Header("Камера")]
+    public bool freeCamera = false;         // false — камера за спиной героя, true — крутится только мышью
     public float fieldOfView = 60f;
     public float cameraDistance = 1f;       // множитель к расстоянию из инспектора камеры
 

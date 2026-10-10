@@ -29,6 +29,8 @@
 
                 <ui:Tab label="Камера">
                     <ui:ScrollView class="tab-scroll">
+                        <ui:Toggle name="free-camera" label="Свободная камера" />
+                        <ui:Label text="Выключено — камера держится за спиной героя, мышью её можно отвести. Включено — камера крутится только мышью." class="hint" />
                         <ui:Slider name="fov" label="Поле зрения" low-value="50" high-value="100" show-input-field="true" />
                         <ui:Slider name="camera-distance" label="Отдаление камеры" low-value="0.6" high-value="1.8" show-input-field="true" />
                     </ui:ScrollView>

@@ -48,6 +48,7 @@ public class PauseMenu : MonoBehaviour
     private Slider _mouseSensitivity;
     private Slider _stickSensitivity;
     private Toggle _invertY;
+    private Toggle _freeCamera;
     private Slider _fov;
     private Slider _cameraDistance;
     private Toggle _fullScreen;
@@ -237,6 +238,7 @@ public class PauseMenu : MonoBehaviour
         _mouseSensitivity = BindSlider(root, "mouse-sensitivity", v => S.mouseSensitivity = v);
         _stickSensitivity = BindSlider(root, "stick-sensitivity", v => S.stickSensitivity = v);
         _invertY = BindToggle(root, "invert-y", v => S.invertY = v);
+        _freeCamera = BindToggle(root, "free-camera", v => S.freeCamera = v);
         _fov = BindSlider(root, "fov", v => S.fieldOfView = Mathf.Round(v));
         _cameraDistance = BindSlider(root, "camera-distance", v => S.cameraDistance = v);
 
@@ -321,6 +323,7 @@ public class PauseMenu : MonoBehaviour
         _mouseSensitivity.SetValueWithoutNotify(S.mouseSensitivity);
         _stickSensitivity.SetValueWithoutNotify(S.stickSensitivity);
         _invertY.SetValueWithoutNotify(S.invertY);
+        _freeCamera.SetValueWithoutNotify(S.freeCamera);
         _fov.SetValueWithoutNotify(S.fieldOfView);
         _cameraDistance.SetValueWithoutNotify(S.cameraDistance);
 

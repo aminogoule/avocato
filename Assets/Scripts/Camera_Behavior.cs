@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-/// Камера от третьего лица: вращается вокруг игрока мышью или правым стиком,
-/// а игрок ходит относительно неё.
+/// Камера от третьего лица. По умолчанию держится за спиной игрока и поворачивается вместе с ним,
+/// мышью или правым стиком её можно временно отвести — потом она сама вернётся за спину.
+/// В настройках игрок может включить свободную камеру: тогда она крутится только мышью.
 [ExecuteAlways]
 public class Camera_Behavior : MonoBehaviour
 {
@@ -34,6 +35,12 @@ public class Camera_Behavior : MonoBehaviour
     [Tooltip("Нижний и верхний предел наклона, градусов")]
     public Vector2 pitchLimits = new(-20f, 70f);
 
+    [Header("Камера за спиной")]
+    [Tooltip("Через сколько секунд после последнего движения мышью камера начинает возвращаться за спину")]
+    [Range(0f, 5f)] public float recenterDelay = 1f;
+    [Tooltip("Плавность возврата за спину, секунд: меньше — быстрее")]
+    [Range(0.05f, 2f)] public float recenterSmoothing = 0.35f;
+
     [Header("Поведение")]
     [Tooltip("Сглаживание в секундах: 0 — камера приклеена жёстко, больше — догоняет плавно. Поворот не сглаживается")]
     [Range(0f, 1f)] public float followSmoothing = 0f;
@@ -48,7 +55,10 @@ public class Camera_Behavior : MonoBehaviour
 
     private InputAction _lookAction;
     private float _yaw;
+    private float _yawOffset;       //насколько камера отведена от спины игрока (режим «за спиной»)
     private float _pitch;
+    private float _lastLookTime = -999f;
+    private bool _wasFree;
     private Vector3 _pivot;
     private float _currentDistance;
     private bool _initialized;
@@ -100,10 +110,14 @@ public class Camera_Behavior : MonoBehaviour
         if (player != null) target = player.transform;
     }
 
-    //стартуем за спиной игрока, дальше угол живёт своей жизнью
+    private static bool FreeCamera => Application.isPlaying && GameSettings.Current.freeCamera;
+
+    //стартуем за спиной игрока
     private void Init()
     {
         _yaw = target.eulerAngles.y;
+        _yawOffset = 0f;
+        _wasFree = FreeCamera;
         _pitch = pitch;
         _pivot = PivotTarget();
         _currentDistance = Distance;
@@ -127,6 +141,7 @@ public class Camera_Behavior : MonoBehaviour
         if (target == null) return;
         if (!_initialized) Init();
         ReadLook();
+        UpdateYaw();
         Apply(followSmoothing > 0f);
     }
 
@@ -149,9 +164,32 @@ public class Camera_Behavior : MonoBehaviour
             look *= stickSpeed * GameSettings.Current.stickSensitivity * Time.deltaTime;
         }
 
-        _yaw = Mathf.Repeat(_yaw + look.x, 360f);
+        if (FreeCamera) _yaw = Mathf.Repeat(_yaw + look.x, 360f);
+        else _yawOffset = Mathf.Clamp(_yawOffset + look.x, -180f, 180f);
         bool invertY = GameSettings.Current.invertY;
         _pitch = Mathf.Clamp(_pitch + (invertY ? look.y : -look.y), pitchLimits.x, pitchLimits.y);
+        _lastLookTime = Time.unscaledTime;
+    }
+
+    private void UpdateYaw()
+    {
+        bool free = FreeCamera;
+        //при переключении режима камера остаётся там, где была, без рывка
+        if (free != _wasFree)
+        {
+            if (!free) _yawOffset = Mathf.DeltaAngle(target.eulerAngles.y, _yaw);
+            _wasFree = free;
+        }
+        if (free) return;
+
+        //за спиной: камера поворачивается вместе с игроком, а отведённая мышью — со временем возвращается
+        if (Time.unscaledTime - _lastLookTime > recenterDelay)
+        {
+            float k = 1f - Mathf.Exp(-Time.deltaTime / recenterSmoothing);
+            _yawOffset = Mathf.Lerp(_yawOffset, 0f, k);
+            _pitch = Mathf.Lerp(_pitch, Mathf.Clamp(pitch, pitchLimits.x, pitchLimits.y), k);
+        }
+        _yaw = Mathf.Repeat(target.eulerAngles.y + _yawOffset, 360f);
     }
 
     private Vector3 PivotTarget() => target.position + Vector3.up * lookAtHeight;
