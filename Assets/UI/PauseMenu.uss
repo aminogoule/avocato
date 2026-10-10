@@ -1,0 +1,194 @@
+/* Цвета в духе авокадо: тёмная кожура, светлая мякоть */
+.overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(8, 12, 8, 0.72);
+}
+
+.hidden {
+    display: none;
+}
+
+.panel {
+    padding: 32px 40px;
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgb(74, 92, 60);
+    background-color: rgb(27, 33, 26);
+}
+
+.pause-panel {
+    width: 460px;
+}
+
+.settings-panel {
+    width: 1040px;
+    height: 820px;
+}
+
+.title {
+    margin-bottom: 20px;
+    font-size: 44px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: rgb(214, 232, 164);
+}
+
+.menu-button {
+    height: 60px;
+    margin: 6px 0;
+    border-width: 0;
+    border-radius: 12px;
+    font-size: 24px;
+    color: rgb(232, 238, 222);
+    background-color: rgb(58, 72, 48);
+}
+
+.menu-button:hover,
+.menu-button:focus {
+    background-color: rgb(98, 132, 58);
+}
+
+.menu-button:active {
+    background-color: rgb(124, 164, 72);
+}
+
+.menu-button--quiet {
+    background-color: rgb(40, 47, 38);
+    color: rgb(190, 200, 180);
+}
+
+/* ---- вкладки ---- */
+.tabs {
+    flex-grow: 1;
+}
+
+.unity-tab__header {
+    padding: 8px 22px;
+}
+
+.unity-tab__header-label {
+    font-size: 22px;
+    color: rgb(170, 184, 160);
+}
+
+.unity-tab__header:checked .unity-tab__header-label {
+    color: rgb(214, 232, 164);
+}
+
+.unity-tab__header-underline {
+    background-color: rgb(140, 180, 80);
+}
+
+.tab-scroll {
+    flex-grow: 1;
+    padding: 12px 8px 0 4px;
+}
+
+.section {
+    margin: 18px 0 6px 0;
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(214, 232, 164);
+}
+
+.hint {
+    margin: 2px 0 8px 0;
+    font-size: 16px;
+    white-space: normal;
+    color: rgb(150, 162, 140);
+}
+
+/* ---- поля настроек ---- */
+.tab-scroll .unity-base-field {
+    min-height: 44px;
+    margin: 4px 0;
+    align-items: center;
+}
+
+.tab-scroll .unity-base-field__label {
+    min-width: 380px;
+    font-size: 20px;
+    color: rgb(226, 232, 216);
+}
+
+.tab-scroll .unity-base-text-field__input,
+.tab-scroll .unity-base-popup-field__input {
+    font-size: 18px;
+    min-height: 34px;
+}
+
+.tab-scroll .unity-base-slider__input-field {
+    width: 90px;
+}
+
+.tab-scroll .unity-toggle__checkmark {
+    width: 26px;
+    height: 26px;
+}
+
+/* ---- переназначение клавиш ---- */
+.binding-row {
+    flex-direction: row;
+    align-items: center;
+    min-height: 48px;
+    margin: 2px 0;
+}
+
+.binding-row__label {
+    min-width: 380px;
+    font-size: 20px;
+    color: rgb(226, 232, 216);
+}
+
+.binding-row__button {
+    width: 260px;
+    height: 42px;
+    border-radius: 10px;
+    font-size: 20px;
+    color: rgb(232, 238, 222);
+    background-color: rgb(58, 72, 48);
+    border-width: 0;
+}
+
+.binding-row__button:hover,
+.binding-row__button:focus {
+    background-color: rgb(98, 132, 58);
+}
+
+.binding-row__button--waiting {
+    background-color: rgb(150, 120, 40);
+}
+
+.small-button {
+    align-self: flex-start;
+    height: 42px;
+    margin-top: 12px;
+    padding: 0 18px;
+    border-radius: 10px;
+    border-width: 0;
+    font-size: 18px;
+    color: rgb(232, 238, 222);
+    background-color: rgb(40, 47, 38);
+}
+
+.small-button:hover,
+.small-button:focus {
+    background-color: rgb(98, 132, 58);
+}
+
+.footer {
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+.footer-button {
+    width: 220px;
+    margin-left: 12px;
+}
